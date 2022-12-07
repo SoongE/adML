@@ -2,7 +2,7 @@ import torch
 from timm import create_model
 from torch import nn
 
-from nerwork.attention_module.attention import ChannelAttention, PixelAttention
+from network.attention_module.attention import ChannelAttention, PixelAttention
 
 
 class AttBlock(nn.Module):

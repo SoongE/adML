@@ -9,7 +9,7 @@ from torchmetrics import Accuracy
 from torchvision.datasets import CIFAR10
 
 from dataset import get_transform
-from nerwork.dual_attention_net import DualAttentionNet
+from network.dual_attention_net import DualAttentionNet
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"

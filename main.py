@@ -9,7 +9,7 @@ from torchmetrics import MeanMetric
 
 import utils
 from dataset import get_transform, MyCIFAR10
-from nerwork.dual_attention_net import DualAttentionNet
+from network.dual_attention_net import DualAttentionNet
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # Arrange GPU devices starting from 0
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # Set the GPU 2 to use

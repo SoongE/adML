@@ -8,9 +8,9 @@ from monai.visualize import GradCAM
 from torchvision.transforms import transforms
 
 from dataset import get_transform
-from nerwork.byol.models.resnet_base_network import BYOLResNet18
-from nerwork.dual_attention_net2 import DualAttentionNet
-from nerwork.simclr import ResNetSimCLR
+from network.byol.models.resnet_base_network import BYOLResNet18
+from network.dual_attention_net2 import DualAttentionNet
+from network.simclr import ResNetSimCLR
 
 imgs = glob('sample_images/*')
 if not os.path.exists('grad_images'):
@@ -22,13 +22,13 @@ DAN.load_state_dict(torch.load('OUR50.pth'), strict=False)
 
 # load pre-trained parameters
 byol = BYOLResNet18()
-load_params = torch.load(os.path.join('nerwork/byol/runs/Dec06_09-59-30_CIDock3/checkpoints/model.pth'))
+load_params = torch.load(os.path.join('network/byol/runs/Dec06_09-59-30_CIDock3/checkpoints/model.pth'))
 
 if 'online_network_state_dict' in load_params:
     byol.load_state_dict(load_params['online_network_state_dict'], strict=False)
 
 simCLR = ResNetSimCLR(out_dim=10)
-state_dict = torch.load('nerwork/simclr/checkpoint_0100.pth.tar')['state_dict']
+state_dict = torch.load('network/simclr/checkpoint_0100.pth.tar')['state_dict']
 for k in list(state_dict.keys()):
     if k.startswith('backbone.'):
         if k.startswith('backbone') and not k.startswith('backbone.fc'):

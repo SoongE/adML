@@ -21,9 +21,9 @@ from timm.data import resolve_data_config
 from timm.models import create_model
 from timm.utils import set_jit_fuser, decay_batch_step, check_batch_size_retry
 
-from nerwork.byol.models.resnet_base_network import BYOLResNet18
-from nerwork.dual_attention_net2 import DualAttentionNet
-from nerwork.simclr import ResNetSimCLR
+from network.byol.models.resnet_base_network import BYOLResNet18
+from network.dual_attention_net2 import DualAttentionNet
+from network.simclr import ResNetSimCLR
 
 try:
     from deepspeed.profiling.flops_profiler import get_model_profile
