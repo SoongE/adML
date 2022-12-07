@@ -43,20 +43,6 @@ class DualAttentionNet(nn.Module):
         self.criterion = nn.SmoothL1Loss()
         self.cos_sim = nn.CosineSimilarity()
 
-    def forward(self, x, pixel_x, channel_x):
-        x = self.backbone(x)
-        basic_pixel_attn = self.pixel_attention(x)
-        basic_channel_attn = self.channel_attention(x)
-
-        pixel_attn = self.pixel_wise_forward(pixel_x)
-        channel_attn = self.channel_wise_forward(channel_x)
-
-        pixel_loss = self.criterion(pixel_attn, basic_pixel_attn)
-        channel_loss = self.criterion(channel_attn, basic_channel_attn)
-
-        loss = (pixel_loss + channel_loss) / 2
-        return loss, self.cos_sim(pixel_attn, basic_pixel_attn), self.cos_sim(channel_attn, basic_channel_attn)
-
     def channel_wise_forward(self, x):
         x = self.backbone(x)
         channel = self.channel_attention(x)
@@ -71,10 +57,12 @@ class DualAttentionNet(nn.Module):
         x = self.backbone(x)
         return self.pixel_attention(x), self.channel_attention(x)
 
-    def regression(self, x):
+    def forward(self, x):
         device = x.device
         x = self.backbone(x)
-        x = torch.cat([self.pixel_attention(x), self.channel_attention(x)], dim=1).to(device)
+        pix = self.pixel_attention(x)
+        chn = self.channel_attention(x)
+        x = torch.cat([pix, chn], dim=1).to(device)
         x = self.fc(x)
         return x
 
@@ -82,7 +70,6 @@ class DualAttentionNet(nn.Module):
 if __name__ == '__main__':
     input = torch.rand(2, 3, 224, 224)
     model = DualAttentionNet()
-    out = model.regression(input)
-
-    print(out[0].shape)
-    print(out[1].shape)
+    # out = model.regression(input)
+    print(model)
+    for name, _ in model.named_modules(): print(name)

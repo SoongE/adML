@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 
 
@@ -30,7 +31,6 @@ class PixelAttention(Attention):
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
         q, k, v = qkv.unbind(0)  # make torchscript happy (cannot use tensor as tuple)
-
         attn = (q @ k.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
@@ -53,10 +53,14 @@ class ChannelAttention(Attention):
         qkv = self.qkv(x)
         qkv = qkv.reshape(B, 3, self.num_heads, C // self.num_heads, H * W).transpose(0, 1)
         q, k, v = qkv.unbind(0)  # make torchscript happy (cannot use tensor as tuple)
-
         attn = (q @ k.transpose(-1, -2)) * self.scale
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
 
         x = (attn @ v).transpose(1, 2).reshape(B, H * W, C)
         return self.proj(x).transpose(1, 2).reshape(B, C, H, W)
+
+
+if __name__ == '__main__':
+    attn = ChannelAttention(96)
+    attn(torch.rand(2, 96, 14, 14))
